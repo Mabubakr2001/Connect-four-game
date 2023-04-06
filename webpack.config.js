@@ -20,7 +20,7 @@ module.exports = {
     // It will be in this path (directory)
     path: path.resolve(__dirname, "dist"),
     // It will take the name of the entry
-    filename: "[name].[contenthash].js",
+    filename: "[name][contenthash].js",
     // It will be clean so that Webpack will not give us a new file whenever we rerun the building command
     clean: true,
     // Any asset will be just like the name of its input and its extension
