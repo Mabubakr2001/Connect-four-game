@@ -46,7 +46,7 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
-      // Other rules for loading other asset types
+      // I use Babel if I want to be backwards compatible for the older browsers
       {
         test: /\.js$/,
         // We add exclude, because we don't want to miss with anything in node_modules
