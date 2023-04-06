@@ -78,5 +78,5 @@ module.exports = {
     historyApiFallback: true,
   },
   //Source maps are files that map the generated code back to the original source code, making it easier to debug your application in the browser's developer tools. But it can significantly increase the build time and file size of your application
-  // devtool: "source-map",
+  devtool: "source-map",
 };
