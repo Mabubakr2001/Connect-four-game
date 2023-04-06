@@ -49,6 +49,7 @@ module.exports = {
       // Other rules for loading other asset types
       {
         test: /\.js$/,
+        // We add exclude, because we don't want to miss with anything in node_modules
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
