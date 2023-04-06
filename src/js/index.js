@@ -1,2 +1,2 @@
-// import "../logo-32X32.png";
+// To make the file known to Webpack
 import "../styles/style.css";

@@ -1,5 +1,7 @@
 // Bringing in the path module just so I can use the full path
 const path = require("path");
+
+// Easily create HTML files to serve my bundles
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const BundleAnalyzerPlugin =
 //   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
@@ -24,6 +26,8 @@ module.exports = {
     // Any asset will be just like the name of its input and its extension
     assetModuleFilename: "[name][ext]",
   },
+
+  // A plugin allows me to tap into the entire compilation life cycle
   plugins: [
     new HtmlWebpackPlugin({
       title: "Connect four game",
@@ -32,9 +36,13 @@ module.exports = {
     }),
     // new BundleAnalyzerPlugin(),
   ],
+
+  // This allows me to bundle any static resource way beyond JavaScript
   module: {
+    // Math files to loader
     rules: [
       {
+        // For any css file use
         test: /\.css$/i,
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
@@ -55,15 +63,20 @@ module.exports = {
       },
     ],
   },
+
   devServer: {
     static: {
       directory: path.resolve(__dirname, "dist"),
     },
     port: 3000,
     open: true,
+    // Makes the changes appear without reloading the page
     hot: true,
+    // The server will compress the response data before sending it to the client, reducing the amount of data transferred over the network and improving the overall performance of the application.
     compress: true,
+    // The historyApiFallback option tells Webpack to serve the index.html file instead of the 404 page when a requested file is not found. This allows the client-side routing to take over and display the correct page based on the requested URL.
     historyApiFallback: true,
   },
-  devtool: "source-map",
+  //Source maps are files that map the generated code back to the original source code, making it easier to debug your application in the browser's developer tools. But it can significantly increase the build time and file size of your application
+  // devtool: "source-map",
 };
