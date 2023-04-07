@@ -8,7 +8,7 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="game-setup" data-state="visible" style="display: none">
+    <div class="game-window" data-window="setup">
       <img src="./assets/images/logo.svg" class="w-fit mx-auto mb-20" />
       <div
         class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer"
@@ -32,17 +32,17 @@
           class="pointer-events-none"
         />
       </div>
-      <div
-        class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer"
-        data-rules
+      <button
+        class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer w-full"
+        data-rules-btn
       >
-        <p>game rules</p>
+        game rules
         <img
           src="./assets/images/rules.svg"
           alt=""
           class="pointer-events-none"
         />
-      </div>
+      </button>
     </div>
   </body>
 </html>

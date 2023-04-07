@@ -8,15 +8,26 @@ body {
   @apply h-screen bg-main box-border font-sans relative;
 }
 
-.game-setup {
+.game-window {
   @apply w-1/3 border-3 border-black rounded-3xl absolute py-16 px-10;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  box-shadow: 0 10px 0 0 #000;
 }
 
-.game-setup[data-state="hidden"] {
+.game-window[data-window="rules"] {
+  background-color: white;
+}
+
+.game-window[data-state="hidden"] {
   animation-name: disappear;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+}
+
+.game-window[data-state="visible"] {
+  animation-name: creation;
   animation-duration: 1.5s;
   animation-timing-function: ease-in-out;
 }
@@ -32,12 +43,37 @@ body {
   }
 }
 
+@keyframes creation {
+  0% {
+    opacity: 0;
+    transform: translate(40%, -50%) scale(0) rotate(40deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
 [data-option],
-[data-rules] {
+[data-rules-btn] {
   box-shadow: 0 10px 0 0 #000;
 }
 
 [data-option]:hover,
-[data-rules]:hover {
+[data-rules-btn]:hover {
   box-shadow: 0 10px 0 0 #0000006b;
+}
+
+.check-btn {
+  position: absolute;
+  bottom: -37.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.check-btn:hover .border,
+.check-btn:hover .box-shadow {
+  fill: #6036c9;
 }
