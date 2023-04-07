@@ -2,6 +2,7 @@
   "name": "connect-four-game",
   "version": "1.0.0",
   "description": "A nice connect four game",
+  "private": true,
   "scripts": {
     "dev": "webpack serve",
     "build": "webpack"
@@ -10,8 +11,7 @@
     "HTML",
     "CSS",
     "TailwindCSS",
-    "JavaScript",
-    "API"
+    "JavaScript"
   ],
   "author": "Mohamed Aboubakr",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "@babel/preset-env": "^7.21.4",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "html-webpack-plugin": "^5.5.0",
     "postcss": "^8.4.21",

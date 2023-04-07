@@ -1,5 +1,6 @@
 // Bringing in the path module just so I can use the full path
 const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // Easily create HTML files to serve my bundles
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -20,11 +21,11 @@ module.exports = {
     // It will be in this path (directory)
     path: path.resolve(__dirname, "dist"),
     // It will take the name of the entry
-    filename: "[name].[contenthash].js",
+    filename: "js/[name][contenthash].js",
     // It will be clean so that Webpack will not give us a new file whenever we rerun the building command
     clean: true,
     // Any asset will be just like the name of its input and its extension
-    assetModuleFilename: "[name].[ext]",
+    assetModuleFilename: "assets/images/[name][ext]",
   },
 
   // A plugin allows me to tap into the entire compilation life cycle
@@ -35,6 +36,14 @@ module.exports = {
       template: "./src/index.html",
     }),
     // new BundleAnalyzerPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "./src/assets"),
+          to: path.resolve(__dirname, "./dist/assets"),
+        },
+      ],
+    }),
   ],
 
   // This allows me to bundle any static resource way beyond JavaScript

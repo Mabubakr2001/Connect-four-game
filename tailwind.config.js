@@ -2,7 +2,22 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        main: "#7945FF",
+        main2: "#FD6687",
+        main3: "#FFCE67",
+      },
+      transitionDuration: {
+        main: "0.3s",
+      },
+      fontFamily: {
+        sans: ["Space Grotesk", "sans-serif"],
+      },
+      borderWidth: {
+        3: "3px",
+      },
+    },
   },
   plugins: [],
 };

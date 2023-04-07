@@ -5,8 +5,44 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link href="./logo-32X32.png" rel="shortcut icon" /> -->
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
-  <body></body>
+  <body>
+    <div class="game-setup" data-state="visible" style="display: none">
+      <img src="./assets/images/logo.svg" class="w-fit mx-auto mb-20" />
+      <div
+        class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer"
+        data-option="playerVScpu"
+      >
+        <p>player vs cpu</p>
+        <img
+          src="./assets/images/player-vs-cpu.svg"
+          alt=""
+          class="pointer-events-none"
+        />
+      </div>
+      <div
+        class="flex justify-between items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main3 duration-main cursor-pointer"
+        data-option="playerVSplayer"
+      >
+        <p>player vs player</p>
+        <img
+          src="./assets/images/player-vs-player.svg"
+          alt=""
+          class="pointer-events-none"
+        />
+      </div>
+      <div
+        class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer"
+        data-rules
+      >
+        <p>game rules</p>
+        <img
+          src="./assets/images/rules.svg"
+          alt=""
+          class="pointer-events-none"
+        />
+      </div>
+    </div>
+  </body>
 </html>
