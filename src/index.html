@@ -8,40 +8,26 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="game-window" data-window="setup">
-      <img src="./assets/images/logo.svg" class="w-fit mx-auto mb-20" />
-      <div
-        class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer"
-        data-option="playerVScpu"
-      >
-        <p>player vs cpu</p>
-        <img
-          src="./assets/images/player-vs-cpu.svg"
-          alt=""
-          class="pointer-events-none"
-        />
-      </div>
-      <div
-        class="flex justify-between items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main3 duration-main cursor-pointer"
-        data-option="playerVSplayer"
-      >
-        <p>player vs player</p>
-        <img
-          src="./assets/images/player-vs-player.svg"
-          alt=""
-          class="pointer-events-none"
-        />
-      </div>
+    <div data-overlay data-state="hidden"></div>
+    <div data-difficulty data-state="hidden">
+      <h2 class="font-semibold mb-5">select difficulty</h2>
       <button
-        class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer w-full"
-        data-rules-btn
+        data-difficulty-option="easy"
+        class="before:bg-white after:bg-white"
       >
-        game rules
-        <img
-          src="./assets/images/rules.svg"
-          alt=""
-          class="pointer-events-none"
-        />
+        easy
+      </button>
+      <button
+        data-difficulty-option="normal"
+        class="hover:text-main3 before:bg-main3 after:bg-main3"
+      >
+        normal
+      </button>
+      <button
+        data-difficulty-option="hard"
+        class="hover:text-main2 before:bg-main2 after:bg-main2"
+      >
+        hard
       </button>
     </div>
   </body>

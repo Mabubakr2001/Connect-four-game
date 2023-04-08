@@ -10,6 +10,7 @@ module.exports = {
       },
       transitionDuration: {
         main: "0.3s",
+        600: "600ms",
       },
       fontFamily: {
         sans: ["Space Grotesk", "sans-serif"],

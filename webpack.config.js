@@ -8,8 +8,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 //   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
-  mode: "production",
-  // mode: "development",
+  // mode: "production",
+  mode: "development",
 
   // The entry is the input that Webpack will look at it, and work on it so that it will give us the output
   entry: {

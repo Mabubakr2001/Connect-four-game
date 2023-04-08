@@ -1,18 +1,21 @@
 // To make the file known to Webpack
 import "../styles/style.css";
-const oldRulesBtn = document.querySelector("[data-rules-btn]");
+const overlay = document.querySelector("[data-overlay]");
+const difficultyWindow = document.querySelector("[data-difficulty]");
 
-function createElement(elementType) {
+const gameSettings = {};
+
+function createElement(elementType, elementState) {
   let element;
   if (elementType === "gameSetup") {
     element = `
-   <div class="game-window" data-state="visible" data-window="setup">
+   <div class="game-window" data-state="${elementState}" data-window="setup">
    <img src="./assets/images/logo.svg" class="w-fit mx-auto mb-20" />
    <div
      class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer"
      data-option="playerVScpu"
    >
-     <p>player vs cpu</p>
+     <p class="pointer-events-none">player vs cpu</p>
      <img
        src="./assets/images/player-vs-cpu.svg"
        alt=""
@@ -23,7 +26,7 @@ function createElement(elementType) {
      class="flex justify-between items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main3 duration-main cursor-pointer"
      data-option="playerVSplayer"
    >
-     <p>player vs player</p>
+     <p class="pointer-events-none">player vs player</p>
      <img
        src="./assets/images/player-vs-player.svg"
        alt=""
@@ -34,7 +37,7 @@ function createElement(elementType) {
      class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer w-full"
      data-rules-btn
    >
-     <p>game rules</p>
+     <p class="pointer-events-none">game rules</p>
      <img
        src="./assets/images/rules.svg"
        alt=""
@@ -46,7 +49,7 @@ function createElement(elementType) {
   }
   if (elementType === "gameRules") {
     element = `
-   <div class="game-window" data-state="visible" data-window="rules">
+   <div class="game-window" data-state="${elementState}" data-window="rules">
    <h1 class="text-center uppercase tracking-wide font-extrabold text-6xl">
      Rules
    </h1>
@@ -75,7 +78,7 @@ function createElement(elementType) {
      game goes second on the next game.
    </p>
    <svg
-     class="check-btn"
+     data-check
      width="70px"
      height="75px"
      viewBox="0 0 70 75"
@@ -84,28 +87,30 @@ function createElement(elementType) {
      xmlns:xlink="http://www.w3.org/1999/xlink"
    >
      <g
+       class="pointer-events-none"
        id="Designs"
        stroke="none"
        stroke-width="1"
        fill="none"
        fill-rule="evenodd"
      >
-       <g id="icon-check">
+       <g id="icon-check" class="pointer-events-none">
          <circle
-           class="border"
+           class="border pointer-events-none"
            fill="#000000"
            cx="35"
            cy="35"
            r="35"
          ></circle>
          <circle
-           class="box-shadow"
+           class="box-shadow pointer-events-none"
            fill="#000000"
            cx="35"
            cy="40"
            r="35"
          ></circle>
          <circle
+           class="pointer-events-none"
            id="Oval-Copy-39"
            fill="#FD6687"
            cx="35"
@@ -113,6 +118,7 @@ function createElement(elementType) {
            r="32"
          ></circle>
          <polyline
+           class="pointer-events-none"
            id="Path"
            stroke="#FFFFFF"
            stroke-width="3"
@@ -127,13 +133,20 @@ function createElement(elementType) {
   document.body.insertAdjacentHTML("beforeend", element);
 }
 
-oldRulesBtn.addEventListener("click", () => {
-  oldRulesBtn.parentElement.dataset.state = "hidden";
-  oldRulesBtn.parentElement.addEventListener("animationend", () => {
-    oldRulesBtn.parentElement.remove();
-    createElement("gameRules");
-  });
-});
+function showHideDifficultyWindow(showOrHide) {
+  if (showOrHide === "show") {
+    overlay.dataset.state = "visible";
+    overlay.addEventListener("transitionend", () => {
+      difficultyWindow.dataset.state = "visible";
+    });
+  }
+  if (showOrHide === "hide") {
+    difficultyWindow.dataset.state = "hidden";
+    difficultyWindow.addEventListener("transitionend", () => {
+      overlay.dataset.state = "hidden";
+    });
+  }
+}
 
 function observeMutationOnTheBody() {
   const observer = new MutationObserver((mutations) => {
@@ -144,29 +157,29 @@ function observeMutationOnTheBody() {
 
       if (gameWindowElement == null) return;
 
-      const gameWindowType = gameWindowElement.dataset.window;
-
-      if (gameWindowType === "rules") {
-        const checkBtn = gameWindowElement.querySelector(".check-btn");
-        checkBtn.addEventListener("click", () => {
+      gameWindowElement.addEventListener("click", ({ target }) => {
+        const clickedSpot = target;
+        const clickedSpotDataAttribute = clickedSpot.dataset;
+        if (clickedSpotDataAttribute.option) {
+          gameSettings.playingOption = clickedSpot.dataset.option;
+          if (clickedSpotDataAttribute.option === "playerVScpu")
+            showHideDifficultyWindow("show");
+        }
+        if (clickedSpotDataAttribute.rulesBtn != null) {
           gameWindowElement.dataset.state = "hidden";
           gameWindowElement.addEventListener("animationend", () => {
             gameWindowElement.remove();
-            createElement("gameSetup");
+            createElement("gameRules", "animated");
           });
-        });
-      }
-
-      if (gameWindowType === "setup") {
-        const newRulesBtn = gameWindowElement.querySelector("[data-rules-btn]");
-        newRulesBtn.addEventListener("click", () => {
+        }
+        if (clickedSpotDataAttribute.check != null) {
           gameWindowElement.dataset.state = "hidden";
           gameWindowElement.addEventListener("animationend", () => {
             gameWindowElement.remove();
-            createElement("gameRules");
+            createElement("gameSetup", "animated");
           });
-        });
-      }
+        }
+      });
     });
   });
   observer.observe(document.body, {
@@ -175,3 +188,4 @@ function observeMutationOnTheBody() {
 }
 
 observeMutationOnTheBody();
+createElement("gameSetup", "visible");
