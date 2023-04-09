@@ -170,27 +170,27 @@ function enterTheGame(playingOption) {
   const overlay = document.querySelector("[data-overlay]");
   const gameSetupWindow = document.querySelector(`[data-window="setup"]`);
 
+  const removeElementsAndRedirect = () => {
+    gameSetupWindow.remove();
+    overlay?.remove();
+    window.location.href = "insideGame.html";
+  };
+
   if (playingOption === "playerVScpu") {
     difficultyWindow.dataset.state = "hidden";
     difficultyWindow.addEventListener("transitionend", () => {
       overlay.dataset.state = "hidden";
-      difficultyWindow.remove();
-      overlay.addEventListener("transitionend", () => {
-        gameSetupWindow.dataset.state = "hidden";
-        overlay.remove();
-        gameSetupWindow.addEventListener("animationend", () => {
-          gameSetupWindow.remove();
-          window.location.href = "insideGame.html";
-        });
-      });
+      gameSetupWindow.dataset.state = "hidden";
+      gameSetupWindow.addEventListener(
+        "animationend",
+        removeElementsAndRedirect
+      );
     });
   }
+
   if (playingOption === "playerVSplayer") {
     gameSetupWindow.dataset.state = "hidden";
-    gameSetupWindow.addEventListener("animationend", () => {
-      gameSetupWindow.remove();
-      window.location.href = "insideGame.html";
-    });
+    gameSetupWindow.addEventListener("animationend", removeElementsAndRedirect);
   }
 
   localStorage.setItem("gameSettings", JSON.stringify(gameSettings));
