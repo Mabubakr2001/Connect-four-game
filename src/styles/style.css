@@ -24,16 +24,19 @@ body {
   animation-name: disappear;
   animation-duration: 1.5s;
   animation-timing-function: ease-in-out;
+  pointer-events: none;
 }
 
 .game-window[data-state="visible"] {
   transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  pointer-events: all;
 }
 
 .game-window[data-state="animated"] {
   animation-name: creation;
   animation-duration: 1.5s;
   animation-timing-function: ease-in-out;
+  pointer-events: all;
 }
 
 @keyframes disappear {
@@ -102,16 +105,16 @@ body {
   pointer-events: all;
 }
 
-[data-difficulty-option] {
+[data-difficulty-level] {
   @apply font-bold block mx-auto uppercase relative;
 }
 
-[data-difficulty-option]:not(:last-child) {
+[data-difficulty-level]:not(:last-child) {
   @apply mb-2;
 }
 
-[data-difficulty-option]::before,
-[data-difficulty-option]::after {
+[data-difficulty-level]::before,
+[data-difficulty-level]::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -121,12 +124,12 @@ body {
   transition: 0.5s;
 }
 
-[data-difficulty-option]:hover::before {
+[data-difficulty-level]:hover::before {
   left: 0;
   width: 50%;
 }
 
-[data-difficulty-option]:hover::after {
+[data-difficulty-level]:hover::after {
   right: 0;
   width: 50%;
 }
