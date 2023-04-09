@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         main: "#7945FF",
+        "main-hover": "#6036c9",
         main2: "#FD6687",
         main3: "#FFCE67",
       },
@@ -17,6 +18,21 @@ module.exports = {
       },
       borderWidth: {
         3: "3px",
+      },
+      width: {
+        45: "45%",
+      },
+      gridTemplateColumns: {
+        main: "repeat(7, 70px)",
+      },
+      gap: {
+        main: "1.8rem",
+      },
+      padding: {
+        main: "1.7rem",
+      },
+      height: {
+        main: "534px",
       },
     },
   },

@@ -194,7 +194,7 @@ function enterTheGame(playingOption) {
   }
 
   localStorage.setItem("gameSettings", JSON.stringify(gameSettings));
-  sessionStorage.setItem("gameSettingsDone", "true");
+  // sessionStorage.setItem("gameSettingsDone", "true");
 }
 
 function selectDifficultyLevel(difficultyWindow) {
