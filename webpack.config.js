@@ -1,6 +1,7 @@
 // Bringing in the path module just so I can use the full path
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Easily create HTML files to serve my bundles
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -14,6 +15,7 @@ module.exports = {
   // The entry is the input that Webpack will look at it, and work on it so that it will give us the output
   entry: {
     index: path.resolve(__dirname, "./src/js/index.js"),
+    insideGame: path.resolve(__dirname, "./src/js/insideGame.js"),
   },
 
   // The output that Webpack will give us
@@ -21,7 +23,7 @@ module.exports = {
     // It will be in this path (directory)
     path: path.resolve(__dirname, "dist"),
     // It will take the name of the entry
-    filename: "js/[name][contenthash].js",
+    filename: "js/[name].[contenthash].js",
     // It will be clean so that Webpack will not give us a new file whenever we rerun the building command
     clean: true,
     // Any asset will be just like the name of its input and its extension
@@ -34,6 +36,13 @@ module.exports = {
       title: "Connect four game",
       filename: "index.html",
       template: "./src/index.html",
+      chunks: ["index"]
+    }),
+    new HtmlWebpackPlugin({
+      title: "Connect four game",
+      filename: "insideGame.html",
+      template: "./src/insideGame.html",
+      chunks: ["insideGame"],
     }),
     // new BundleAnalyzerPlugin(),
     new CopyWebpackPlugin({
@@ -44,16 +53,18 @@ module.exports = {
         },
       ],
     }),
+    new MiniCssExtractPlugin({
+      filename: "styles/style.css",
+    }),
   ],
 
   // This allows me to bundle any static resource way beyond JavaScript
   module: {
-    // Math files to loader
     rules: [
       {
         // For any css file use
         test: /\.css$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
       // I use Babel if I want to be backwards compatible for the older browsers
       {

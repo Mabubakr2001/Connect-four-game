@@ -1,11 +1,9 @@
 // To make the file known to Webpack
 import "../styles/style.css";
-const overlay = document.querySelector("[data-overlay]");
-const difficultyWindow = document.querySelector("[data-difficulty]");
 
 const gameSettings = {};
 
-function createElement(elementType, elementState) {
+function createElement(elementType, elementState = undefined) {
   let element;
   if (elementType === "gameSetup") {
     element = `
@@ -47,6 +45,7 @@ function createElement(elementType, elementState) {
  </div>
     `;
   }
+
   if (elementType === "gameRules") {
     element = `
    <div class="game-window" data-state="${elementState}" data-window="rules">
@@ -130,22 +129,40 @@ function createElement(elementType, elementState) {
  </div>
    `;
   }
-  document.body.insertAdjacentHTML("beforeend", element);
-}
 
-function showHideDifficultyWindow(showOrHide) {
-  if (showOrHide === "show") {
-    overlay.dataset.state = "visible";
-    overlay.addEventListener("transitionend", () => {
-      difficultyWindow.dataset.state = "visible";
-    });
+  if (elementType === "overlay") {
+    element = `
+    <div data-overlay data-state="hidden"></div>
+   `;
   }
-  if (showOrHide === "hide") {
-    difficultyWindow.dataset.state = "hidden";
-    difficultyWindow.addEventListener("transitionend", () => {
-      overlay.dataset.state = "hidden";
-    });
+
+  if (elementType === "difficultyWindow") {
+    element = `
+   <div data-difficulty-window data-state="hidden">
+     <h2 class="font-semibold mb-5">select difficulty</h2>
+     <button
+       data-difficulty-option="easy"
+       class="before:bg-white after:bg-white"
+     >
+       easy
+     </button>
+     <button
+       data-difficulty-option="normal"
+       class="hover:text-main3 before:bg-main3 after:bg-main3"
+     >
+       normal
+     </button>
+     <button
+       data-difficulty-option="hard"
+       class="hover:text-main2 before:bg-main2 after:bg-main2"
+     >
+       hard
+     </button>
+   </div>
+   `;
   }
+
+  document.body.insertAdjacentHTML("beforeend", element);
 }
 
 function observeMutationOnTheBody() {
@@ -160,11 +177,24 @@ function observeMutationOnTheBody() {
       gameWindowElement.addEventListener("click", ({ target }) => {
         const clickedSpot = target;
         const clickedSpotDataAttribute = clickedSpot.dataset;
+
         if (clickedSpotDataAttribute.option) {
           gameSettings.playingOption = clickedSpot.dataset.option;
-          if (clickedSpotDataAttribute.option === "playerVScpu")
-            showHideDifficultyWindow("show");
+          if (clickedSpotDataAttribute.option === "playerVScpu") {
+            createElement("overlay");
+            setTimeout(() => {
+              document.querySelector("[data-overlay]").dataset.state =
+                "visible";
+              createElement("difficultyWindow");
+              setTimeout(() => {
+                document.querySelector(
+                  "[data-difficulty-window]"
+                ).dataset.state = "visible";
+              }, 605);
+            }, 5);
+          }
         }
+
         if (clickedSpotDataAttribute.rulesBtn != null) {
           gameWindowElement.dataset.state = "hidden";
           gameWindowElement.addEventListener("animationend", () => {
@@ -172,6 +202,7 @@ function observeMutationOnTheBody() {
             createElement("gameRules", "animated");
           });
         }
+
         if (clickedSpotDataAttribute.check != null) {
           gameWindowElement.dataset.state = "hidden";
           gameWindowElement.addEventListener("animationend", () => {
