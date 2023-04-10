@@ -3,6 +3,15 @@ const approvedGameSettings = JSON.parse(localStorage.getItem("gameSettings"));
 const menuBtn = document.querySelector("[data-menu-btn]");
 approvedGameSettings.currentTurnColor = "red";
 
+const gameBoard = [
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+];
+
 function createElement(elementType, elementState = undefined) {
   let element;
   if (elementType === "playerOne") {
@@ -104,12 +113,12 @@ function createElement(elementType, elementState = undefined) {
   document.body.insertAdjacentHTML("beforeend", element);
 }
 
-function checkPlayingOption() {
-  if (approvedGameSettings.playingOption === "playerVSplayer") {
+function checkPlayingOption(playingOption) {
+  if (playingOption === "playerVSplayer") {
     createElement("playerOne", "hidden");
     createElement("playerTwo", "hidden");
   }
-  if (approvedGameSettings.playingOption === "playerVScpu") {
+  if (playingOption === "playerVScpu") {
     createElement("user", "hidden");
     createElement("cpu", "hidden");
   }
@@ -119,7 +128,7 @@ function initGameView() {
   document.querySelector("[data-manipulate-game]").dataset.state = "visible";
   document.querySelector("[data-playing-interaction]").dataset.state =
     "visible";
-  checkPlayingOption();
+  checkPlayingOption(approvedGameSettings.playingOption);
   setTimeout(() => {
     document
       .querySelectorAll(".player")
