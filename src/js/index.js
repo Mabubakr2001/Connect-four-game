@@ -9,8 +9,8 @@ function createElement(elementType, elementState = undefined) {
     element = `
    <div class="game-window" data-state="${elementState}" data-window="setup">
    <img src="./assets/images/logo.svg" class="w-fit mx-auto mb-20" />
-   <div
-     class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer"
+   <button
+     class="flex justify-between text-white items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main2 duration-main cursor-pointer w-full"
      data-option="playerVScpu"
    >
      <p class="pointer-events-none">player vs cpu</p>
@@ -19,9 +19,9 @@ function createElement(elementType, elementState = undefined) {
        alt=""
        class="pointer-events-none"
      />
-   </div>
-   <div
-     class="flex justify-between items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main3 duration-main cursor-pointer"
+   </button>
+   <button
+     class="flex justify-between items-center text-2xl font-bold border-3 border-black mb-5 py-3 px-4 rounded-2xl uppercase bg-main3 duration-main cursor-pointer w-full"
      data-option="playerVSplayer"
    >
      <p class="pointer-events-none">player vs player</p>
@@ -30,7 +30,7 @@ function createElement(elementType, elementState = undefined) {
        alt=""
        class="pointer-events-none"
      />
-   </div>
+   </button>
    <button
      class="flex justify-between items-center font-bold text-2xl border-3 border-black py-3 px-4 rounded-2xl uppercase bg-white duration-main cursor-pointer w-full"
      data-rules-btn

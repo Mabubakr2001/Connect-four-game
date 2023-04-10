@@ -21,6 +21,7 @@ module.exports = {
       },
       width: {
         45: "45%",
+        90: "89.7%",
       },
       gridTemplateColumns: {
         main: "repeat(7, 70px)",
@@ -33,6 +34,17 @@ module.exports = {
       },
       height: {
         main: "534px",
+        90: "89.75%",
+      },
+      gap: {
+        4: "18px",
+      },
+      borderRadius: {
+        circle: "50%",
+      },
+      margin: {
+        tileTop: "1.75px",
+        tileLeft: "1.7px",
       },
     },
   },

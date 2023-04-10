@@ -9,7 +9,7 @@ body {
 }
 
 .game-window {
-  @apply w-1/3 border-3 border-black rounded-3xl absolute py-16 px-10;
+  @apply w-1/3 border-3 border-black rounded-3xl fixed py-16 px-10;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -20,19 +20,23 @@ body {
   background-color: white;
 }
 
-.game-window[data-state="hidden"] {
+.game-window[data-window="menu"] {
+  background-color: #7945ff;
+}
+
+.game-window:not([data-window="menu"])[data-state="hidden"] {
   animation-name: disappear;
   animation-duration: 1.5s;
   animation-timing-function: ease-in-out;
   pointer-events: none;
 }
 
-.game-window[data-state="visible"] {
+.game-window:not([data-window="menu"])[data-state="visible"] {
   transform: translate(-50%, -50%) scale(1) rotate(0deg);
   pointer-events: all;
 }
 
-.game-window[data-state="animated"] {
+.game-window:not([data-window="menu"])[data-state="animated"] {
   animation-name: creation;
   animation-duration: 1.5s;
   animation-timing-function: ease-in-out;
@@ -62,12 +66,18 @@ body {
 }
 
 [data-option],
-[data-rules-btn] {
+[data-rules-btn],
+[data-continue-btn],
+[data-restart-btn-main],
+[data-quit-btn] {
   box-shadow: 0 10px 0 0 #000;
 }
 
 [data-option]:hover,
-[data-rules-btn]:hover {
+[data-rules-btn]:hover,
+[data-continue-btn]:hover,
+[data-restart-btn-main]:hover,
+[data-quit-btn]:hover {
   box-shadow: 0 10px 0 0 #0000006b;
 }
 
@@ -95,12 +105,14 @@ body {
   @apply w-1/3 fixed left-1/2 top-2/4 duration-600 rounded-xl text-white bg-main text-center uppercase text-2xl py-5 z-20;
 }
 
-[data-difficulty-window][data-state="hidden"] {
+[data-difficulty-window][data-state="hidden"],
+[data-window="menu"][data-state="hidden"] {
   transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
 }
 
-[data-difficulty-window][data-state="visible"] {
+[data-difficulty-window][data-state="visible"],
+[data-window="menu"][data-state="visible"] {
   transform: translate(-50%, -50%) scale(1);
   pointer-events: all;
 }
@@ -142,4 +154,58 @@ body {
 [data-overlay][data-state="visible"] {
   height: 100%;
   pointer-events: all;
+}
+
+[data-manipulate-game],
+[data-playing-interaction],
+.player {
+  transition: 1s ease-in-out;
+}
+
+[data-manipulate-game][data-state="hidden"] {
+  transform: translateY(-120%);
+}
+
+[data-manipulate-game][data-state="visible"] {
+  transform: translateY(0);
+}
+
+[data-playing-interaction][data-state="hidden"] {
+  transform: translateY(120%);
+}
+
+[data-playing-interaction][data-state="visible"] {
+  transform: translateY(0);
+}
+
+.player {
+  position: absolute;
+  top: 50%;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  width: 9rem;
+  border-radius: 20px;
+  border: 3px solid #000;
+  box-shadow: 0 10px 0 0 #000;
+  padding: 15px 0;
+}
+
+[data-player-type="one"][data-state="hidden"],
+[data-player-type="user"][data-state="hidden"] {
+  left: -120%;
+}
+
+[data-player-type="one"][data-state="visible"],
+[data-player-type="user"][data-state="visible"] {
+  left: 17%;
+}
+
+[data-player-type="two"][data-state="hidden"],
+[data-player-type="cpu"][data-state="hidden"] {
+  right: -120%;
+}
+
+[data-player-type="two"][data-state="visible"],
+[data-player-type="cpu"][data-state="visible"] {
+  right: 7%;
 }
