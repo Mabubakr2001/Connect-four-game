@@ -1,22 +1,68 @@
 import "../styles/style.css";
 const approvedGameSettings = JSON.parse(localStorage.getItem("gameSettings"));
 const menuBtn = document.querySelector("[data-menu-btn]");
-approvedGameSettings.currentTurnColor = "red";
+
+let currentActivePlayer = 1;
 
 const gameBoard = [
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
+  [null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null],
 ];
+
+function getLowestEmptyRow(column) {
+  for (let row = gameBoard.length - 1; row >= 0; row--) {
+    if (gameBoard[row][column - 1] == null) return row;
+  }
+  return -1;
+}
+
+function createTileElement(row, column, player) {
+  const tileElement = document.createElement("div");
+  tileElement.className = "tile";
+  tileElement.dataset.row = row;
+  tileElement.dataset.column = column;
+  tileElement.classList.add(`bg-${player === 1 ? "main2" : "main3"}`);
+  return tileElement;
+}
+
+function insertTileElement(tileElement) {
+  const tileElementRow = +tileElement.dataset.row;
+  const tileElementColumn = +tileElement.dataset.column;
+  const tileElementCell = document.querySelector(
+    `[data-row="${tileElementRow + 1}"][data-column="${tileElementColumn}"]`
+  );
+  if (tileElementCell == null) return;
+  tileElementCell.appendChild(tileElement);
+}
+
+function switchPlayer() {
+  currentActivePlayer = currentActivePlayer === 1 ? 2 : 1;
+}
+
+function makeTileComesIntoExistence(column) {
+  const lowestEmptyRow = getLowestEmptyRow(column);
+  if (lowestEmptyRow === -1) return;
+  gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
+  console.log(gameBoard);
+  const tileElementAboutToBeInserted = createTileElement(
+    lowestEmptyRow,
+    column,
+    currentActivePlayer
+  );
+  insertTileElement(tileElementAboutToBeInserted);
+  switchPlayer();
+  updateThePointer(document.querySelector(`[data-column-num="${column}"]`));
+}
 
 function createElement(elementType, elementState = undefined) {
   let element;
   if (elementType === "playerOne") {
     element = `
-   <div class="player" data-state="${elementState}" data-player-type="one">
+   <div class="player" data-state="${elementState}" data-player-type="1">
      <img
        class="mx-auto -mt-11 mb-3"
        src="./assets/images/player-one.svg"
@@ -31,7 +77,7 @@ function createElement(elementType, elementState = undefined) {
   }
   if (elementType === "playerTwo") {
     element = `
-   <div class="player" data-state="${elementState}" data-player-type="two">
+   <div class="player" data-state="${elementState}" data-player-type="2">
      <img
        class="mx-auto -mt-11 mb-3"
        src="./assets/images/player-two.svg"
@@ -46,7 +92,7 @@ function createElement(elementType, elementState = undefined) {
   }
   if (elementType === "user") {
     element = `
-   <div class="player" data-state="${elementState}" data-player-type="user">
+   <div class="player" data-state="${elementState}" data-player-type="1">
      <img
        class="mx-auto -mt-11 mb-3"
        src="./assets/images/you.svg"
@@ -61,7 +107,7 @@ function createElement(elementType, elementState = undefined) {
   }
   if (elementType === "cpu") {
     element = `
-   <div class="player" data-state="${elementState}" data-player-type="cpu">
+   <div class="player" data-state="${elementState}" data-player-type="2">
      <img
        class="mx-auto -mt-11 mb-3"
        src="./assets/images/cpu.svg"
@@ -130,9 +176,13 @@ function initGameView() {
     "visible";
   checkPlayingOption(approvedGameSettings.playingOption);
   setTimeout(() => {
-    document
-      .querySelectorAll(".player")
-      .forEach((playerSpot) => (playerSpot.dataset.state = "visible"));
+    document.querySelectorAll(".player").forEach((playerSpot) => {
+      playerSpot.dataset.state = "animated";
+      playerSpot.addEventListener("transitionend", () => {
+        if (playerSpot.dataset.playerType === "1")
+          return (playerSpot.dataset.state = "active");
+      });
+    });
   }, 5);
 }
 
@@ -151,7 +201,7 @@ function openMenuWindow() {
   }, 5);
 }
 
-function moveThePointer(targetColumn) {
+function updateThePointer(targetColumn) {
   const hoveredGridColumnNum =
     targetColumn.closest("[data-column-num]")?.dataset.columnNum;
 
@@ -167,7 +217,9 @@ function moveThePointer(targetColumn) {
 
   targetPointerSpot.insertAdjacentHTML(
     "beforeend",
-    `<img src="./assets/images/marker-${approvedGameSettings.currentTurnColor}.svg" alt="" />`
+    `<img src="./assets/images/marker-${
+      currentActivePlayer === 1 ? "red" : "yellow"
+    }.svg" alt="" />`
   );
 }
 
@@ -175,4 +227,17 @@ window.addEventListener("load", initGameView);
 
 menuBtn.addEventListener("click", openMenuWindow);
 
-document.addEventListener("mousemove", ({ target }) => moveThePointer(target));
+document.addEventListener("mousemove", ({ target }) =>
+  updateThePointer(target)
+);
+
+document
+  .querySelector("[data-grid-column-only]")
+  .addEventListener("click", ({ target }) => {
+    const choosenColumnNum =
+      target.closest("[data-column-num]")?.dataset.columnNum;
+
+    if (choosenColumnNum == null) return;
+
+    makeTileComesIntoExistence(+choosenColumnNum);
+  });

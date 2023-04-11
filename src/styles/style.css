@@ -190,39 +190,42 @@ body {
   transition: background-color 0.3s ease-in-out;
 }
 
-[data-player-type="one"][data-state="hidden"],
-[data-player-type="user"][data-state="hidden"] {
+[data-player-type="1"][data-state="hidden"] {
   left: -120%;
 }
 
-[data-player-type="one"][data-state="visible"],
-[data-player-type="user"][data-state="visible"] {
+[data-player-type="1"][data-state="animated"] {
   transition: 1s ease-in-out;
   left: 17%;
 }
 
-[data-player-type="one"][data-state="active"],
-[data-player-type="user"][data-state="active"] {
+[data-player-type="1"][data-state="active"] {
   @apply bg-main2 text-white;
-  transition: 0.2s ease-in-out;
+  transition: none;
   left: 17%;
 }
 
-[data-player-type="two"][data-state="hidden"],
-[data-player-type="cpu"][data-state="hidden"] {
+[data-player-type="1"][data-state="stable"] {
+  transition: none;
+  left: 17%;
+}
+
+[data-player-type="2"][data-state="hidden"] {
   right: -120%;
 }
 
-[data-player-type="two"][data-state="visible"],
-[data-player-type="cpu"][data-state="visible"] {
+[data-player-type="2"][data-state="animated"] {
   transition: 1s ease-in-out;
   right: 7%;
 }
 
-[data-player-type="two"][data-state="active"],
-[data-player-type="cpu"][data-state="active"] {
+[data-player-type="2"][data-state="stable"] {
+  transition: none;
+  right: 7%;
+}
+
+[data-player-type="2"][data-state="active"] {
   @apply bg-main3;
-  transition: 0.2s ease-in-out;
   right: 7%;
 }
 
@@ -236,4 +239,8 @@ body {
   @apply bg-main3;
   top: 28%;
   right: 13.7%;
+}
+
+.tile {
+  @apply w-90 h-90 rounded-circle mt-tileTop ml-tileLeft duration-500;
 }
