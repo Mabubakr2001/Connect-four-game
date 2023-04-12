@@ -30,7 +30,7 @@ function handleWinning() {
   winnerPlayerSpot.textContent = +winnerPlayerSpot.textContent + 1;
 }
 
-function checkWin(board, player) {
+function checkWinning(board, player) {
   const numRows = board.length;
   const numCols = board[0].length;
 
@@ -118,21 +118,15 @@ function switchPlayer() {
 }
 
 function makeTileComesIntoExistence(column) {
-  console.log(gameOver);
-  if (!gameOver) {
-    const lowestEmptyRow = getLowestEmptyRow(column);
-    if (lowestEmptyRow === -1) return;
-    gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
-    const tileElementAboutToBeInserted = createTileElement(
-      lowestEmptyRow,
-      column,
-      currentActivePlayer
-    );
-    checkWin(gameBoard, currentActivePlayer);
-    insertTileElement(tileElementAboutToBeInserted);
-    switchPlayer();
-    updateThePointer(document.querySelector(`[data-column-num="${column}"]`));
-  }
+  const lowestEmptyRow = getLowestEmptyRow(column);
+  if (lowestEmptyRow === -1) return;
+  gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
+  const tileElementAboutToBeInserted = createTileElement(
+    lowestEmptyRow,
+    column,
+    currentActivePlayer
+  );
+  insertTileElement(tileElementAboutToBeInserted);
 }
 
 function createElement(elementType, elementState = undefined) {
@@ -311,12 +305,19 @@ document.addEventListener("mousemove", ({ target }) =>
 document
   .querySelector("[data-grid-column-only]")
   .addEventListener("click", ({ target }) => {
+    if (gameOver) return;
+
     const choosenColumnNum =
       target.closest("[data-column-num]")?.dataset.columnNum;
 
     if (choosenColumnNum == null) return;
 
     makeTileComesIntoExistence(+choosenColumnNum);
+    checkWinning(gameBoard, currentActivePlayer);
+    switchPlayer();
+    updateThePointer(
+      document.querySelector(`[data-column-num="${choosenColumnNum}"]`)
+    );
   });
 
 /* 
