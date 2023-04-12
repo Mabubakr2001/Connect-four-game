@@ -1,9 +1,5 @@
-The player selects the column where they want to drop their tile.
+I need to check for winning in: 
 
-The game checks if the selected column is valid. A column is valid if it is not already full of tiles.
-
-If the selected column is valid, the game places the tile in the lowest available row of that column.
-
-The game checks if the tile placement results in a win. A player wins Connect Four by connecting four of their own tiles in a row, either horizontally, vertically, or diagonally.
-
-If the tile placement does not result in a win, the game switches to the other player's turn.
+1- Verctical line
+1- Horizental line
+1- Diagonal line

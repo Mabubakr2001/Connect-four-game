@@ -42,10 +42,6 @@ module.exports = {
       borderRadius: {
         circle: "50%",
       },
-      margin: {
-        tileTop: "1.75px",
-        tileLeft: "1.7px",
-      },
     },
   },
   plugins: [],

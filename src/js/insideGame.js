@@ -13,6 +13,53 @@ const gameBoard = [
   [null, null, null, null, null, null, null],
 ];
 
+function checkWin(board, player) {
+  const numRows = board.length; // 6
+  const numCols = board[0].length; // 7
+
+  const directions = [
+    [0, 1], // horizontal
+    [1, 1], // diagonal /
+    [1, 0], // vertical
+    [1, -1], // diagonal \
+  ];
+
+  // I'm looping over eath cell
+  for (let row = 0; row < numRows; row++) {
+    // row = 0;
+    for (let col = 0; col < numCols; col++) {
+      // col = 0;
+      const cell = board[row][col];
+      if (cell === player) {
+        // if board[0][0] === 1
+        for (const [dx, dy] of directions) {
+          let settledCells = 0;
+          for (let k = 0; k < 4; k++) {
+            const newRow = row + k * dx; // 0
+            const newCol = col + k * dy; // 0
+
+            if (
+              newRow >= 0 &&
+              newRow < numRows &&
+              newCol >= 0 &&
+              newCol < numCols &&
+              board[newRow][newCol] === player
+            ) {
+              settledCells++;
+            }
+          }
+
+          if (settledCells === 4) {
+            return console.log("Connect four!");
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 function getLowestEmptyRow(column) {
   for (let row = gameBoard.length - 1; row >= 0; row--) {
     if (gameBoard[row][column - 1] == null) return row;
@@ -35,24 +82,32 @@ function insertTileElement(tileElement) {
   const tileElementCell = document.querySelector(
     `[data-row="${tileElementRow + 1}"][data-column="${tileElementColumn}"]`
   );
+  tileElementCell.dataset.state = `${
+    currentActivePlayer === 1 ? "red" : "yellow"
+  }`;
   if (tileElementCell == null) return;
   tileElementCell.appendChild(tileElement);
 }
 
 function switchPlayer() {
   currentActivePlayer = currentActivePlayer === 1 ? 2 : 1;
+  document.querySelectorAll("[data-player-type]").forEach((playerSpot) => {
+    if (playerSpot.dataset.playerType === currentActivePlayer.toString())
+      return (playerSpot.dataset.state = "active");
+    playerSpot.dataset.state = "stable";
+  });
 }
 
 function makeTileComesIntoExistence(column) {
   const lowestEmptyRow = getLowestEmptyRow(column);
   if (lowestEmptyRow === -1) return;
   gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
-  console.log(gameBoard);
   const tileElementAboutToBeInserted = createTileElement(
     lowestEmptyRow,
     column,
     currentActivePlayer
   );
+  checkWin(gameBoard, currentActivePlayer);
   insertTileElement(tileElementAboutToBeInserted);
   switchPlayer();
   updateThePointer(document.querySelector(`[data-column-num="${column}"]`));
@@ -180,7 +235,7 @@ function initGameView() {
       playerSpot.dataset.state = "animated";
       playerSpot.addEventListener("transitionend", () => {
         if (playerSpot.dataset.playerType === "1")
-          return (playerSpot.dataset.state = "active");
+          playerSpot.dataset.state = "active";
       });
     });
   }, 5);
