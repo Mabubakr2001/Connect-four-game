@@ -3,6 +3,7 @@ const approvedGameSettings = JSON.parse(localStorage.getItem("gameSettings"));
 const menuBtn = document.querySelector("[data-menu-btn]");
 
 let currentActivePlayer = 1;
+let gameOver = false;
 
 const gameBoard = [
   [null, null, null, null, null, null, null],
@@ -13,45 +14,63 @@ const gameBoard = [
   [null, null, null, null, null, null, null],
 ];
 
+function handleWinning() {
+  document.querySelector("[data-winner-color]")?.remove();
+  const winningElement = `
+    <span
+    class="absolute p-3 text-xl font-bold rounded-md"
+    data-winner-color="${currentActivePlayer === 1 ? "red" : "yellow"}"
+    >Winner!</span
+  `;
+  document.body.insertAdjacentHTML("beforeend", winningElement);
+  const winnerPlayerSpot = document.querySelector(
+    `[data-player-${currentActivePlayer === 1 ? "one" : "two"}-score]`
+  );
+
+  winnerPlayerSpot.textContent = +winnerPlayerSpot.textContent + 1;
+}
+
 function checkWin(board, player) {
-  const numRows = board.length; // 6
-  const numCols = board[0].length; // 7
+  const numRows = board.length;
+  const numCols = board[0].length;
 
   const directions = [
     [0, 1], // horizontal
     [1, 1], // diagonal /
-    [1, 0], // vertical
+    [1, 0], // vertical |
     [1, -1], // diagonal \
   ];
 
-  // I'm looping over eath cell
   for (let row = 0; row < numRows; row++) {
-    // row = 0;
     for (let col = 0; col < numCols; col++) {
-      // col = 0;
       const cell = board[row][col];
-      if (cell === player) {
-        // if board[0][0] === 1
-        for (const [dx, dy] of directions) {
-          let settledCells = 0;
-          for (let k = 0; k < 4; k++) {
-            const newRow = row + k * dx; // 0
-            const newCol = col + k * dy; // 0
 
-            if (
-              newRow >= 0 &&
-              newRow < numRows &&
-              newCol >= 0 &&
-              newCol < numCols &&
-              board[newRow][newCol] === player
-            ) {
-              settledCells++;
-            }
-          }
+      if (cell !== player) {
+        continue;
+      }
 
-          if (settledCells === 4) {
-            return console.log("Connect four!");
+      for (const [dx, dy] of directions) {
+        let settledCells = 0;
+
+        for (let i = 0; i < 4; i++) {
+          const anotherRow = row + i * dx;
+          const anotherCol = col + i * dy;
+
+          if (
+            anotherRow >= 0 &&
+            anotherRow < numRows &&
+            anotherCol >= 0 &&
+            anotherCol < numCols &&
+            board[anotherRow][anotherCol] === player
+          ) {
+            settledCells++;
           }
+        }
+
+        if (settledCells === 4) {
+          gameOver = true;
+          handleWinning();
+          return true;
         }
       }
     }
@@ -99,18 +118,21 @@ function switchPlayer() {
 }
 
 function makeTileComesIntoExistence(column) {
-  const lowestEmptyRow = getLowestEmptyRow(column);
-  if (lowestEmptyRow === -1) return;
-  gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
-  const tileElementAboutToBeInserted = createTileElement(
-    lowestEmptyRow,
-    column,
-    currentActivePlayer
-  );
-  checkWin(gameBoard, currentActivePlayer);
-  insertTileElement(tileElementAboutToBeInserted);
-  switchPlayer();
-  updateThePointer(document.querySelector(`[data-column-num="${column}"]`));
+  console.log(gameOver);
+  if (!gameOver) {
+    const lowestEmptyRow = getLowestEmptyRow(column);
+    if (lowestEmptyRow === -1) return;
+    gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
+    const tileElementAboutToBeInserted = createTileElement(
+      lowestEmptyRow,
+      column,
+      currentActivePlayer
+    );
+    checkWin(gameBoard, currentActivePlayer);
+    insertTileElement(tileElementAboutToBeInserted);
+    switchPlayer();
+    updateThePointer(document.querySelector(`[data-column-num="${column}"]`));
+  }
 }
 
 function createElement(elementType, elementState = undefined) {
@@ -296,3 +318,32 @@ document
 
     makeTileComesIntoExistence(+choosenColumnNum);
   });
+
+/* 
+
+if (cell === player) {
+  // if board[0][0] === 1
+  for (const [dx, dy] of directions) {
+    let settledCells = 0;
+    for (let k = 0; k < 4; k++) {
+      const anotherRow = row + k * dx; // 0
+      const anotherCol = col + k * dy; // 0
+
+      if (
+        anotherRow >= 0 &&
+        anotherRow < numRows &&
+        anotherCol >= 0 &&
+        anotherCol < numCols &&
+        board[anotherRow][anotherCol] === player
+      ) {
+        settledCells++;
+      }
+    }
+
+    if (settledCells === 4) {
+      return console.log("Connect four!");
+    }
+  }
+}
+
+*/
