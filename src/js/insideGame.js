@@ -1,6 +1,5 @@
 import "../styles/style.css";
 const approvedGameSettings = JSON.parse(localStorage.getItem("gameSettings"));
-const menuBtn = document.querySelector("[data-menu-btn]");
 
 let currentActivePlayer = 1;
 let gameOver = false;
@@ -82,7 +81,7 @@ function createElement(elementType, elementState = undefined) {
      alt=""
    />
    <h2 class="text-center text-xl font-bold uppercase">You</h2>
-   <span class="block w-fit mx-auto text-6xl font-bold" data-user-score
+   <span class="block w-fit mx-auto text-6xl font-bold" data-player-one-score
      >0</span
    >
  </div>
@@ -97,7 +96,7 @@ function createElement(elementType, elementState = undefined) {
      alt=""
    />
    <h2 class="text-center text-xl font-bold uppercase">cpu</h2>
-   <span class="block w-fit mx-auto text-6xl font-bold" data-cpu-score
+   <span class="block w-fit mx-auto text-6xl font-bold" data-player-two-score
      >0</span
    >
  </div>
@@ -347,6 +346,7 @@ function restartTheGame() {
   );
   resetGameBoard(gameBoard);
   gameOver = false;
+  document.querySelector("[data-restart-btn-sub]").dataset.state = "enabled";
 }
 
 function handleModalWindowBtnsClick(action, modalWindow) {
@@ -367,6 +367,13 @@ function handleModalWindowBtnsClick(action, modalWindow) {
         modalWindow.remove();
         const overlay = document.querySelector("[data-overlay]");
         overlay.dataset.state = "hidden";
+        document.querySelector("[data-manipulate-game]").dataset.state =
+          "hidden";
+        document.querySelector("[data-playing-interaction]").dataset.state =
+          "hidden";
+        document
+          .querySelectorAll("[data-player-type]")
+          .forEach((playerSpot) => (playerSpot.dataset.state = "hidden"));
         overlay.addEventListener("transitionend", () => {
           overlay.remove();
           window.location.href = "index.html";
@@ -376,6 +383,7 @@ function handleModalWindowBtnsClick(action, modalWindow) {
     default:
       return;
   }
+  document.querySelector("[data-menu-btn]").dataset.state = "enabled";
 }
 
 function observeMutationOnTheBody() {
@@ -413,16 +421,20 @@ function observeMutationOnTheBody() {
 
 window.addEventListener("load", initGameView);
 
-menuBtn.addEventListener("click", openMenuWindow);
+document
+  .querySelector("[data-manipulate-game]")
+  .addEventListener("click", ({ target }) => {
+    if (target.dataset.menuBtn != null) {
+      target.dataset.state = "disabled";
+      openMenuWindow();
+    }
+    if (target.dataset.restartBtnSub != null) restartTheGame();
+  });
 
 document.addEventListener("mousemove", ({ target }) => moveThePointer(target));
 
 document
   .querySelector("[data-grid-column-only]")
   .addEventListener("click", ({ target }) => runTheGame(target));
-
-document
-  .querySelector("[data-restart-btn-sub]")
-  .addEventListener("click", restartTheGame);
 
 observeMutationOnTheBody();
