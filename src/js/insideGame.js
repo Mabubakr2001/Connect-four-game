@@ -148,6 +148,7 @@ function openMenuWindow() {
     const overlay = document.querySelector("[data-overlay]");
     overlay.dataset.state = "visible";
     overlay.addEventListener("transitionend", () => {
+      if (overlay.dataset.state === "hidden") return;
       createElement("menu", "hidden");
       setTimeout(() => {
         const menuWindow = document.querySelector(`[data-window="menu"]`);
@@ -180,6 +181,7 @@ function moveThePointer(targetColumn) {
 }
 
 function updatePointerColor(pointerElement, newColor) {
+  if (pointerElement == null) return;
   pointerElement.src = `./assets/images/marker-${newColor}.svg`;
 }
 
@@ -209,10 +211,9 @@ function insertTileElement(tileElement) {
   tileElementCell.appendChild(tileElement);
 }
 
-function switchPlayer() {
-  currentActivePlayer = currentActivePlayer === 1 ? 2 : 1;
+function switchPlayer(newPlayer) {
   document.querySelectorAll("[data-player-type]").forEach((playerSpot) => {
-    if (playerSpot.dataset.playerType === currentActivePlayer.toString())
+    if (playerSpot.dataset.playerType === newPlayer.toString())
       return (playerSpot.dataset.state = "active");
     playerSpot.dataset.state = "stable";
   });
@@ -306,7 +307,7 @@ function runTheGame(clickedSpot) {
 
   if (checkWinning(gameBoard, currentActivePlayer)) return;
 
-  switchPlayer();
+  switchPlayer((currentActivePlayer = currentActivePlayer === 1 ? 2 : 1));
   updatePointerColor(
     document.querySelector("[data-pointer]"),
     currentActivePlayer === 1 ? "red" : "yellow"
@@ -331,13 +332,44 @@ function resetGameBoard(board) {
 }
 
 function restartTheGame() {
-  switchPlayer();
+  currentActivePlayer = 1;
+  switchPlayer(1);
   document.querySelector("[data-winner-color]")?.remove();
-  document
-    .querySelector("[data-pointer]")
-    ?.updatePointerColor(currentActivePlayer === 1 ? "red" : "yellow");
+  updatePointerColor(
+    document.querySelector("[data-pointer]"),
+    currentActivePlayer === 1 ? "red" : "yellow"
+  );
   resetGameBoard(gameBoard);
   gameOver = false;
+}
+
+function handleModalWindowBtnsClick(action, modalWindow) {
+  switch (action) {
+    case "restart":
+    case "continue":
+      modalWindow.dataset.state = "hidden";
+      modalWindow.addEventListener("transitionend", () => {
+        modalWindow.remove();
+        const overlay = document.querySelector("[data-overlay]");
+        overlay.dataset.state = "hidden";
+        overlay.addEventListener("transitionend", () => overlay.remove());
+      });
+      break;
+    case "quit":
+      modalWindow.dataset.state = "hidden";
+      modalWindow.addEventListener("transitionend", () => {
+        modalWindow.remove();
+        const overlay = document.querySelector("[data-overlay]");
+        overlay.dataset.state = "hidden";
+        overlay.addEventListener("transitionend", () => {
+          overlay.remove();
+          window.location.href = "index.html";
+        });
+      });
+      break;
+    default:
+      return;
+  }
 }
 
 function observeMutationOnTheBody() {
@@ -346,25 +378,28 @@ function observeMutationOnTheBody() {
       const menuWindow = Array.from(mutation.addedNodes).find(
         (node) => node.dataset?.window === "menu"
       );
+
       if (menuWindow == null) return;
+
       menuWindow.addEventListener("click", ({ target }) => {
         const clickedBtn = target.closest("[data-window-btn]");
+
         if (clickedBtn == null) return;
+
         if (clickedBtn.dataset.windowBtn === "restart") {
           restartTheGame();
-          menuWindow.dataset.state = "hidden";
-          menuWindow.addEventListener("transitionend", () => {
-            menuWindow.remove();
-            const overlay = document.querySelector("[data-overlay]");
-            overlay.dataset.state = "hidden";
-            overlay.addEventListener("transitionend", () => {
-              overlay.remove();
-            });
-          });
+          handleModalWindowBtnsClick("restart", menuWindow);
         }
+
+        if (clickedBtn.dataset.windowBtn === "quit")
+          handleModalWindowBtnsClick("quit", menuWindow);
+
+        if (clickedBtn.dataset.windowBtn === "continue")
+          handleModalWindowBtnsClick("continue", menuWindow);
       });
     });
   });
+
   observer.observe(document.body, {
     childList: true,
   });
