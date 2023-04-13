@@ -371,6 +371,7 @@ function handleModalWindowBtnsClick(action, modalWindow) {
           "hidden";
         document.querySelector("[data-playing-interaction]").dataset.state =
           "hidden";
+        document.querySelector("[data-winner-color]")?.remove();
         document
           .querySelectorAll("[data-player-type]")
           .forEach((playerSpot) => (playerSpot.dataset.state = "hidden"));
@@ -438,3 +439,5 @@ document
   .addEventListener("click", ({ target }) => runTheGame(target));
 
 observeMutationOnTheBody();
+
+/* <div class="winning-circle" data-winning-circle></div> */

@@ -257,3 +257,21 @@ body {
   margin-top: 5px;
   z-index: -100;
 }
+
+.winning-circle {
+  @apply w-1/2 h-1/2 rounded-circle absolute top-2/4 left-2/4;
+  border: 6px solid #fff;
+  transform: translate(-50%, -50%);
+  animation-name: popup;
+  animation-duration: 0.4s;
+  animation-timing-function: linear;
+}
+
+@keyframes popup {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
