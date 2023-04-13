@@ -325,7 +325,7 @@ function resetGameBoard(board) {
   const allCols = board.at(0).length;
   for (let row = 0; row < allRows; row++) {
     for (let col = 0; col < allCols; col++) {
-      const cellElement = document.querySel-*ector(
+      const cellElement = document.querySelector(
         `[data-row="${row + 1}"][data-column="${col + 1}"]`
       );
       if (board[row][col] === null) {
