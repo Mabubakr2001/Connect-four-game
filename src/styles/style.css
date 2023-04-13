@@ -226,6 +226,7 @@ body {
 
 [data-player-type="2"][data-state="active"] {
   @apply bg-main3;
+  transition: none;
   right: 7%;
 }
 

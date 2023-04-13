@@ -303,6 +303,12 @@ function runTheGame(clickedSpot) {
 
   if (choosenColumnNum == null) return;
 
+  const theColumnIsNotEmpty = gameBoard.every(
+    (row) => row[choosenColumnNum - 1] != null
+  );
+
+  if (theColumnIsNotEmpty) return;
+
   makeTileComesIntoExistence(+choosenColumnNum);
 
   if (checkWinning(gameBoard, currentActivePlayer)) return;
@@ -319,7 +325,7 @@ function resetGameBoard(board) {
   const allCols = board.at(0).length;
   for (let row = 0; row < allRows; row++) {
     for (let col = 0; col < allCols; col++) {
-      const cellElement = document.querySelector(
+      const cellElement = document.querySel-*ector(
         `[data-row="${row + 1}"][data-column="${col + 1}"]`
       );
       if (board[row][col] === null) {
