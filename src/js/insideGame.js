@@ -231,7 +231,6 @@ function makeTileComesIntoExistence(column) {
 }
 
 function drawWinningCircle(winningSequence) {
-  console.log(winningSequence);
   for (const { cellRow, cellCol } of winningSequence) {
     const cellElement = document.querySelector(
       `[data-cell][data-row="${cellRow + 1}"][data-column="${cellCol + 1}"]`
@@ -455,5 +454,3 @@ document
   .addEventListener("click", ({ target }) => runTheGame(target));
 
 observeMutationOnTheBody();
-
-/* <div class="winning-circle"></div> */
