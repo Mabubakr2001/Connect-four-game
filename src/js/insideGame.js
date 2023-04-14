@@ -230,19 +230,77 @@ function makeTileComesIntoExistence(column) {
   insertTileElement(tileElementAboutToBeInserted);
 }
 
-function handleWinning() {
+function drawWinningCircle(winnerPlayerNum, winningDirection) {
+  console.log(winningDirection);
+  const numRows = gameBoard.length;
+  const numCols = gameBoard[0].length;
+
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
+      const cell = gameBoard[row][col];
+
+      if (cell !== winnerPlayerNum) {
+        continue;
+      }
+
+      document
+        .querySelector(
+          `[data-cell][data-row="${row + 1}"][data-column="${col + 1}"]`
+        )
+        .insertAdjacentHTML("beforeend", `<div class="winning-circle"></div>`);
+
+      for (const [dx, dy] of winningDirection) {
+        let settledCells = 0;
+
+        for (let i = 0; i < 4; i++) {
+          const anotherRow = row + i * dx;
+          const anotherCol = col + i * dy;
+
+          if (
+            anotherRow >= 0 &&
+            anotherRow < numRows &&
+            anotherCol >= 0 &&
+            anotherCol < numCols &&
+            gameBoard[anotherRow][anotherCol] === winnerPlayerNum
+          ) {
+            settledCells++;
+            document
+              .querySelector(
+                `[data-cell][data-row="${anotherRow + 1}"][data-column="${
+                  anotherCol + 1
+                }"]`
+              )
+              .insertAdjacentHTML(
+                "beforeend",
+                `<div class="winning-circle"></div>`
+              );
+          }
+        }
+
+        if (settledCells === 4) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+function handleWinning(winnerPlayerNum, winningDirection) {
   const winningElement = `
    <span
    class="absolute p-3 text-xl font-bold rounded-md"
-   data-winner-color="${currentActivePlayer === 1 ? "red" : "yellow"}"
+   data-winner-color="${winnerPlayerNum === 1 ? "red" : "yellow"}"
    >Winner!</span
  `;
   document.body.insertAdjacentHTML("beforeend", winningElement);
   const winnerPlayerSpot = document.querySelector(
-    `[data-player-${currentActivePlayer === 1 ? "one" : "two"}-score]`
+    `[data-player-${winnerPlayerNum === 1 ? "one" : "two"}-score]`
   );
 
   winnerPlayerSpot.textContent = +winnerPlayerSpot.textContent + 1;
+  drawWinningCircle(winnerPlayerNum, winningDirection);
 }
 
 function checkWinning(board, player) {
@@ -284,7 +342,7 @@ function checkWinning(board, player) {
 
         if (settledCells === 4) {
           gameOver = true;
-          handleWinning();
+          handleWinning(currentActivePlayer, [dx, dy]);
           return true;
         }
       }
@@ -440,4 +498,4 @@ document
 
 observeMutationOnTheBody();
 
-/* <div class="winning-circle" data-winning-circle></div> */
+/* <div class="winning-circle"></div> */
