@@ -231,7 +231,6 @@ function makeTileComesIntoExistence(column) {
 }
 
 function drawWinningCircle(winningSequence) {
-  console.log(winningSequence);
   for (const { cellRow, cellCol } of winningSequence) {
     const cellElement = document.querySelector(
       `.tile[data-row="${cellRow}"][data-column="${cellCol + 1}"]`
@@ -265,9 +264,9 @@ function checkWinning(board, player) {
 
   const directions = [
     [0, 1], // horizontal
-    [1, 1], // diagonal /
-    [1, 0], // vertical |
-    [1, -1], // diagonal \
+    [1, 1], // diagonal to the bottom right
+    [1, 0], // vertical
+    [1, -1], // diagonal to the bottom left
   ];
 
   for (let row = 0; row < numRows; row++) {
