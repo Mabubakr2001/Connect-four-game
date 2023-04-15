@@ -253,7 +253,7 @@ body {
 }
 
 .tile {
-  @apply w-full h-full rounded-circle duration-500;
+  @apply w-full h-full rounded-circle duration-500 relative;
   margin-top: 5px;
   z-index: -100;
 }

@@ -231,9 +231,10 @@ function makeTileComesIntoExistence(column) {
 }
 
 function drawWinningCircle(winningSequence) {
+  console.log(winningSequence);
   for (const { cellRow, cellCol } of winningSequence) {
     const cellElement = document.querySelector(
-      `[data-cell][data-row="${cellRow + 1}"][data-column="${cellCol + 1}"]`
+      `.tile[data-row="${cellRow}"][data-column="${cellCol + 1}"]`
     );
     cellElement.insertAdjacentHTML(
       "beforeend",
@@ -277,11 +278,13 @@ function checkWinning(board, player) {
         continue;
       }
 
+      // Loops through each direction and checks if there is a winning sequence in that direction.
       for (const [dx, dy] of directions) {
+        // Starts from the current cell and looks at the next three cells in that direction
         const winningSequence = [{ cellRow: row, cellCol: col }];
-        let settledCells = 0;
+        let settledCells = 1;
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 1; i < 4; i++) {
           const anotherRow = row + i * dx;
           const anotherCol = col + i * dy;
 
