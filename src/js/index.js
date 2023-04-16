@@ -130,80 +130,18 @@ function createElement(elementType, elementState = undefined) {
    `;
   }
 
-  if (elementType === "overlay") {
-    element = `
-    <div data-overlay data-state="hidden"></div>
-   `;
-  }
-
-  if (elementType === "difficultyWindow") {
-    element = `
-   <div data-difficulty-window data-state="hidden">
-     <h2 class="font-semibold mb-5">select difficulty</h2>
-     <button
-       data-difficulty-level="easy"
-       class="before:bg-white after:bg-white"
-     >
-       easy
-     </button>
-     <button
-       data-difficulty-level="normal"
-       class="hover:text-main3 before:bg-main3 after:bg-main3"
-     >
-       normal
-     </button>
-     <button
-       data-difficulty-level="hard"
-       class="hover:text-main2 before:bg-main2 after:bg-main2"
-     >
-       hard
-     </button>
-   </div>
-   `;
-  }
-
   document.body.insertAdjacentHTML("beforeend", element);
 }
 
-function enterTheGame(playingOption) {
-  const difficultyWindow = document.querySelector("[data-difficulty-window]");
-  const overlay = document.querySelector("[data-overlay]");
+function enterTheGame() {
   const gameSetupWindow = document.querySelector(`[data-window="setup"]`);
-
-  const removeElementsAndRedirect = () => {
+  gameSetupWindow.dataset.state = "hidden";
+  gameSetupWindow.addEventListener("animationend", () => {
     gameSetupWindow.remove();
-    overlay?.remove();
     window.location.href = "insideGame.html";
-  };
-
-  if (playingOption === "playerVScpu") {
-    difficultyWindow.dataset.state = "hidden";
-    difficultyWindow.addEventListener("transitionend", () => {
-      overlay.dataset.state = "hidden";
-      gameSetupWindow.dataset.state = "hidden";
-      gameSetupWindow.addEventListener(
-        "animationend",
-        removeElementsAndRedirect
-      );
-    });
-  }
-
-  if (playingOption === "playerVSplayer") {
-    gameSetupWindow.dataset.state = "hidden";
-    gameSetupWindow.addEventListener("animationend", removeElementsAndRedirect);
-  }
+  });
 
   localStorage.setItem("gameSettings", JSON.stringify(gameSettings));
-  // sessionStorage.setItem("gameSettingsDone", "true");
-}
-
-function selectDifficultyLevel(difficultyWindow) {
-  difficultyWindow.addEventListener("click", ({ target }) => {
-    const clickedLevelSpot = target.closest("[data-difficulty-level]");
-    if (clickedLevelSpot == null) return;
-    gameSettings.difficultyLevel = clickedLevelSpot.dataset.difficultyLevel;
-    enterTheGame(gameSettings.playingOption);
-  });
 }
 
 function observeMutationOnTheBody() {
@@ -220,25 +158,8 @@ function observeMutationOnTheBody() {
         const clickedSpotDataAttribute = clickedSpot.dataset;
 
         if (clickedSpotDataAttribute.option) {
-          gameSettings.playingOption = clickedSpot.dataset.option;
-          if (clickedSpotDataAttribute.option === "playerVScpu") {
-            createElement("overlay");
-            setTimeout(() => {
-              document.querySelector("[data-overlay]").dataset.state =
-                "visible";
-              createElement("difficultyWindow");
-              setTimeout(() => {
-                const difficultyWindow = document.querySelector(
-                  "[data-difficulty-window]"
-                );
-                difficultyWindow.dataset.state = "visible";
-                selectDifficultyLevel(difficultyWindow);
-              }, 605);
-            }, 5);
-          }
-          if (clickedSpotDataAttribute.option === "playerVSplayer") {
-            enterTheGame(gameSettings.playingOption);
-          }
+          gameSettings.playingOption = clickedSpotDataAttribute.option;
+          enterTheGame();
         }
 
         if (clickedSpotDataAttribute.rulesBtn != null) {
