@@ -184,9 +184,9 @@ function updatePointerColor(pointerElement, newColor) {
   pointerElement.src = `./assets/images/marker-${newColor}.svg`;
 }
 
-function getLowestEmptyRow(column) {
-  for (let row = gameBoard.length - 1; row >= 0; row--) {
-    if (gameBoard[row][column - 1] == null) return row;
+function getLowestEmptyRow(board, column) {
+  for (let row = board.length - 1; row >= 0; row--) {
+    if (board[row][column - 1] == null) return row;
   }
   return -1;
 }
@@ -219,7 +219,7 @@ function switchPlayer(newPlayer) {
 }
 
 function makeTileComesIntoExistence(column) {
-  const lowestEmptyRow = getLowestEmptyRow(column);
+  const lowestEmptyRow = getLowestEmptyRow(gameBoard, column);
   if (lowestEmptyRow === -1) return;
   gameBoard[lowestEmptyRow][column - 1] = currentActivePlayer;
   const tileElementAboutToBeInserted = createTileElement(
@@ -258,6 +258,12 @@ function handleWinning(winnerPlayerNum, winningSequence) {
   drawWinningCircle(winningSequence);
 }
 
+function isValidCoordinate(board, row, col) {
+  const numRows = board.length;
+  const numCols = board[0].length;
+  return row >= 0 && row < numRows && col >= 0 && col < numCols;
+}
+
 function checkWinning(board, player) {
   const numRows = board.length;
   const numCols = board[0].length;
@@ -288,10 +294,7 @@ function checkWinning(board, player) {
           const anotherCol = col + i * dy;
 
           if (
-            anotherRow >= 0 &&
-            anotherRow < numRows &&
-            anotherCol >= 0 &&
-            anotherCol < numCols &&
+            isValidCoordinate(board, anotherRow, anotherCol) &&
             board[anotherRow][anotherCol] === player
           ) {
             winningSequence.push({ cellRow: anotherRow, cellCol: anotherCol });
@@ -436,6 +439,10 @@ function observeMutationOnTheBody() {
     childList: true,
   });
 }
+
+// function isBoardFull(board) {
+//   return board[0].every((cell) => cell != null);
+// }
 
 window.addEventListener("load", initGameView);
 
