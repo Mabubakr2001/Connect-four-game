@@ -325,7 +325,6 @@ function runTheGame(clickedSpot) {
   makeTileComesIntoExistence(+choosenColumnNum);
 
   if (checkWinning(gameBoard, currentActivePlayer)) return;
-  console.log(getBestMove(gameBoard))
 
   switchPlayer((currentActivePlayer = currentActivePlayer === 1 ? 2 : 1));
   updatePointerColor(
@@ -435,9 +434,6 @@ function observeMutationOnTheBody() {
   });
 }
 
-const human = 1;
-const ai = 2;
-
 function isValidCoordinate(board, row, col) {
   const numRows = board.length;
   const numCols = board[0].length;
@@ -446,37 +442,6 @@ function isValidCoordinate(board, row, col) {
 
 function isBoardFull(board) {
   return board[0].every((cell) => cell != null);
-}
-
-function isTerminalNode(board) {
-  return checkWinning(board, human) || checkWinning(board, ai) || isBoardFull(board)
-}
-
-function getBestMove(board){
-  const allRows = board.length;
-  const allColumns = board[0].length;
-
-  let bestEvaluation = -Infinity;
-  let bestMove;
-
-  for (let row = 0; row < allRows; row++) {
-    for (let column = 0; column < allColumns; column++){
-      if (board[row][column] != null) {
-        board[row][column] = ai;
-        const evaluation = minimax(board, 5, false);
-        board[row][column] = null;
-        if (evaluation > bestEvaluation) {
-          bestEvaluation = evaluation;
-          bestMove = {row, column};
-        }
-      }
-    }
-  }
-  return bestMove;
-}
-
-function minimax(board, depth, isMaximizingPlayer){
-
 }
 
 window.addEventListener("load", initGameView);
