@@ -1,5 +1,0 @@
-I need to check for winning in: 
-
-1- Verctical line
-1- Horizental line
-1- Diagonal line
