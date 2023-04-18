@@ -258,7 +258,7 @@ function handleWinning(winnerPlayerNum, winningSequence) {
   drawWinningCircle(winningSequence);
 }
 
-function checkWinning(board, player) {
+export function checkWinning(board) {
   const numRows = board.length;
   const numCols = board[0].length;
 
@@ -273,7 +273,7 @@ function checkWinning(board, player) {
     for (let col = 0; col < numCols; col++) {
       const cell = board[row][col];
 
-      if (cell !== player) {
+      if (cell !== currentActivePlayer) {
         continue;
       }
 
@@ -289,7 +289,7 @@ function checkWinning(board, player) {
 
           if (
             isValidCoordinate(board, anotherRow, anotherCol) &&
-            board[anotherRow][anotherCol] === player
+            board[anotherRow][anotherCol] === currentActivePlayer
           ) {
             winningSequence.push({ cellRow: anotherRow, cellCol: anotherCol });
             settledCells++;
@@ -324,7 +324,7 @@ function runTheGame(clickedSpot) {
 
   makeTileComesIntoExistence(+choosenColumnNum);
 
-  if (checkWinning(gameBoard, currentActivePlayer)) return;
+  if (checkWinning(gameBoard)) return;
 
   switchPlayer((currentActivePlayer = currentActivePlayer === 1 ? 2 : 1));
   updatePointerColor(
